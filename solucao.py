@@ -1,4 +1,5 @@
 from collections import deque
+from heapq import heapify, heappush, heappop
 
 class Nodo:
     """
@@ -6,7 +7,7 @@ class Nodo:
     """
 
 
-    def __init__(self, estado, pai, acao, custo):
+    def __init__(self, estado, pai, acao, custo, heuristica):
         """
         Inicializa o nodo com os atributos recebidos
         :param estado:str, representacao do estado do 8-puzzle
@@ -19,6 +20,10 @@ class Nodo:
         self.pai = pai
         self.acao = acao
         self.custo = custo
+        self.heuristica = heuristica
+
+    def __lt__(self, other):
+        return (self.custo + self.heuristica) < (other.custo + other.heuristica)
 
 
 def sucessor(estado):
@@ -83,7 +88,7 @@ def expande(nodo):
     listaNodosFilhos = []
 
     for tuplaSucc in listaSucessores:
-        novoNodo = Nodo(tuplaSucc[1], nodo, tuplaSucc[0], nodo.custo+1)
+        novoNodo = Nodo(tuplaSucc[1], nodo, tuplaSucc[0], nodo.custo+1, 0)
         listaNodosFilhos.append(novoNodo)
 
     return listaNodosFilhos
@@ -98,7 +103,7 @@ def bfs(estado):
     :param estado: str
     :return:
     """
-    nodoRaiz = Nodo(estado, None, None, 0)
+    nodoRaiz = Nodo(estado, None, None, 0, 0)
 
 
     X = {}
@@ -113,8 +118,6 @@ def bfs(estado):
                 listaRetorno.append(v)
                 v = v.pai
             return listaRetorno
-
-            #retornar caminho
         if v.estado not in X:
             X[v.estado] = v.estado
             filhos = expande(v)
@@ -133,7 +136,7 @@ def dfs(estado):
     :param estado: str
     :return:
     """
-    nodoRaiz = Nodo(estado, None, None, 0)
+    nodoRaiz = Nodo(estado, None, None, 0, 0)
 
     X = {}
     F = deque([nodoRaiz])
@@ -147,8 +150,6 @@ def dfs(estado):
                 listaRetorno.append(v)
                 v = v.pai
             return listaRetorno
-
-            # retornar caminho
         if v.estado not in X:
             X[v.estado] = v.estado
             filhos = expande(v)
@@ -179,5 +180,38 @@ def astar_manhattan(estado):
     :param estado: str
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+
+    nodoRaiz = Nodo(estado, None, None, 0, 0)
+    nodoRaiz.heuristica = manhattan_distance(nodoRaiz)
+
+    X = {}
+    F = []
+    heapify(F)
+    heappush(F,nodoRaiz)
+    while True:
+        if not F:
+            return None
+        v = heappop(F)
+        if v.estado == "12345678_":
+            listaRetorno = []
+            while v.pai is not None:
+                listaRetorno.append(v)
+                v = v.pai
+            return listaRetorno
+        if v.estado not in X:
+            X[v.estado] = v.estado
+            filhos = expande(v)
+            for filho in filhos:
+                if filho.estado not in X:
+                    filho.heuristica = manhattan_distance(filho)
+                    heappush(F,filho)
+
+def manhattan_distance(nodo):
+    distance = 0
+    for indexSolucao in range(8):
+        indexCaractere = nodo.estado.find(str(indexSolucao))
+        dist_x = abs((indexCaractere % 3) - (indexSolucao % 3))
+        dist_y = abs(int(indexCaractere / 3) - int(indexSolucao / 3))
+        distance = distance + dist_x + dist_y
+
+    return distance

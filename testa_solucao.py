@@ -22,7 +22,7 @@ class TestaSolucao(unittest.TestCase):
         Testa a função expande para um Node com estado "185432_67" e custo 2
         :return:
         """
-        pai = solucao.Nodo("185432_67", None, "abaixo", 2)  # o pai do pai esta incorreto, mas nao interfere no teste
+        pai = solucao.Nodo("185432_67", None, "abaixo", 2, 0)  # o pai do pai esta incorreto, mas nao interfere no teste
         # a resposta esperada deve conter nodos com os seguintes atributos (ordem dos nodos nao importa)
         resposta_esperada = {
             ("185_32467", pai, "acima", 3),
