@@ -99,12 +99,10 @@ def bfs(estado):
     :return:
     """
     nodoRaiz = Nodo(estado, None, None, 0)
-    #nodoRaiz = Nodo("1234567_8", None, None, 0)
 
 
     X = {}
     F = deque([nodoRaiz])
-
     while True:
         if not F:
             return None
@@ -124,9 +122,6 @@ def bfs(estado):
                 if filho.estado not in X:
                     F.append(filho)
 
-            #for filho in expande(v):
-            #    F.append(filho)
-
 
 
 def dfs(estado):
@@ -138,8 +133,28 @@ def dfs(estado):
     :param estado: str
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+    nodoRaiz = Nodo(estado, None, None, 0)
+
+    X = {}
+    F = deque([nodoRaiz])
+    while True:
+        if not F:
+            return None
+        v = F.pop()
+        if v.estado == "12345678_":
+            listaRetorno = []
+            while v.pai is not None:
+                listaRetorno.append(v)
+                v = v.pai
+            return listaRetorno
+
+            # retornar caminho
+        if v.estado not in X:
+            X[v.estado] = v.estado
+            filhos = expande(v)
+            for filho in filhos:
+                if filho.estado not in X:
+                    F.append(filho)
 
 
 def astar_hamming(estado):
