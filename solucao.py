@@ -1,5 +1,6 @@
 from collections import deque
 from heapq import heapify, heappush, heappop
+from heapq import heappush, heappop
 
 class Nodo:
     """
@@ -158,6 +159,16 @@ def dfs(estado):
                     F.append(filho)
 
 
+def hamming(estado):
+    estadoFinal = "12345678_"
+    resultado = 0
+
+    for pos in range(9):
+        if estado[pos] != estadoFinal[pos] :
+            resultado += 1
+    
+    return resultado
+
 def astar_hamming(estado):
     """
     Recebe um estado (string), executa a busca A* com h(n) = soma das distâncias de Hamming e
@@ -168,7 +179,37 @@ def astar_hamming(estado):
     :return:
     """
     # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+    nodoRaiz = Nodo(estado, None, None, 0)
+    #nodoRaiz = Nodo("231456_78", None, None, 0)
+    id = 1
+
+    X = {}
+    F = [] #heap queue
+    heappush(F, (0, 0, nodoRaiz))
+
+    while True:
+        if not F:
+            return None
+        v = heappop(F)[2]
+        print(v.estado)
+        if v.estado == "12345678_":
+            listaRetorno = []
+            while v.pai is not None:
+                listaRetorno.append(v)
+                v = v.pai
+            return listaRetorno
+            #retornar caminho
+
+
+        if v.estado not in X:
+            X[v.estado] = v.estado
+            filhos = expande(v)
+            for filho in filhos:
+                if filho.estado not in X:
+                    heappush(F, (hamming(filho.estado), id ,filho))
+                    id = id + 1
+
+    #raise NotImplementedError
 
 
 def astar_manhattan(estado):
@@ -180,7 +221,6 @@ def astar_manhattan(estado):
     :param estado: str
     :return:
     """
-
     nodoRaiz = Nodo(estado, None, None, 0, 0)
     nodoRaiz.heuristica = manhattan_distance(nodoRaiz)
 
