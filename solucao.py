@@ -186,8 +186,8 @@ def astar_hamming(estado):
     :return:
     """
     # substituir a linha abaixo pelo seu codigo
-    #nodoRaiz = Nodo(estado, None, None, 0)
-    nodoRaiz = Nodo("1234567_8", None, None, 0)
+    nodoRaiz = Nodo(estado, None, None, 0)
+    #nodoRaiz = Nodo("231456_78", None, None, 0)
     id = 1
 
     X = {}
@@ -213,7 +213,7 @@ def astar_hamming(estado):
             filhos = expande(v)
             for filho in filhos:
                 if filho.estado not in X:
-                    heappush(F, (-hamming(filho.estado), id ,filho))
+                    heappush(F, (hamming(filho.estado), id ,filho))
                     id = id + 1
 
     #raise NotImplementedError
@@ -231,5 +231,5 @@ def astar_manhattan(estado):
     # substituir a linha abaixo pelo seu codigo
     raise NotImplementedError
 
-print(hamming("12345678_"))
-#print(astar_hamming(None)[0].estado)
+#print(hamming("12345678_"))
+#print(astar_hamming(None))
