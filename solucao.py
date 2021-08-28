@@ -179,7 +179,7 @@ def astar_hamming(estado):
     :return:
     """
     # substituir a linha abaixo pelo seu codigo
-    nodoRaiz = Nodo(estado, None, None, 0)
+    nodoRaiz = Nodo(estado, None, None, 0, 0)
     #nodoRaiz = Nodo("231456_78", None, None, 0)
     id = 1
 
@@ -191,7 +191,6 @@ def astar_hamming(estado):
         if not F:
             return None
         v = heappop(F)[2]
-        print(v.estado)
         if v.estado == "12345678_":
             listaRetorno = []
             while v.pai is not None:
