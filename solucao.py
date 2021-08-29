@@ -1,6 +1,7 @@
 from collections import deque
 from heapq import heapify, heappush, heappop
 from heapq import heappush, heappop
+import time
 
 class Nodo:
     """
@@ -8,7 +9,7 @@ class Nodo:
     """
 
 
-    def __init__(self, estado: object, pai: object, acao: object, custo: object, heuristica: object) -> object:
+    def __init__(self, estado: object, pai: object, acao: object, custo: object) -> object:
         """
         Inicializa o nodo com os atributos recebidos
         :param estado:str, representacao do estado do 8-puzzle
@@ -21,7 +22,7 @@ class Nodo:
         self.pai = pai
         self.acao = acao
         self.custo = custo
-        self.heuristica = heuristica
+        self.heuristica = 0
 
     def __lt__(self, other):
         return (self.custo + self.heuristica) < (other.custo + other.heuristica)
@@ -89,7 +90,7 @@ def expande(nodo):
     listaNodosFilhos = []
 
     for tuplaSucc in listaSucessores:
-        novoNodo = Nodo(tuplaSucc[1], nodo, tuplaSucc[0], nodo.custo+1, 0)
+        novoNodo = Nodo(tuplaSucc[1], nodo, tuplaSucc[0], nodo.custo+1)
         listaNodosFilhos.append(novoNodo)
 
     return listaNodosFilhos
@@ -104,7 +105,8 @@ def bfs(estado):
     :param estado: str
     :return:
     """
-    nodoRaiz = Nodo(estado, None, None, 0, 0)
+    start = time.time()
+    nodoRaiz = Nodo(estado, None, None, 0)
 
 
     X = {}
@@ -115,6 +117,12 @@ def bfs(estado):
         v = F.popleft()
         if v.estado == "12345678_":
             listaRetorno = []
+            end = time.time()
+            print("bfs")
+            print(estado)
+            print(end - start)
+            print(len(X))
+            print(v.custo)
             while v.pai is not None:
                 listaRetorno.append(v)
                 v = v.pai
@@ -128,6 +136,7 @@ def bfs(estado):
 
 
 
+
 def dfs(estado):
     """
     Recebe um estado (string), executa a busca em PROFUNDIDADE e
@@ -137,16 +146,29 @@ def dfs(estado):
     :param estado: str
     :return:
     """
-    nodoRaiz = Nodo(estado, None, None, 0, 0)
+    start = time.time()
+    nodoRaiz = Nodo(estado, None, None, 0)
 
     X = {}
     F = deque([nodoRaiz])
     while True:
         if not F:
+            end = time.time()
+            print("dfs")
+            print(estado)
+            print(end - start)
+            print(len(X))
+            print(v.custo)
             return None
         v = F.pop()
         if v.estado == "12345678_":
             listaRetorno = []
+            end = time.time()
+            print("dfs")
+            print(estado)
+            print(end - start)
+            print(len(X))
+            print(v.custo)
             while v.pai is not None:
                 listaRetorno.append(v)
                 v = v.pai
@@ -179,7 +201,8 @@ def astar_hamming(estado):
     :return:
     """
     # substituir a linha abaixo pelo seu codigo
-    nodoRaiz = Nodo(estado, None, None, 0, 0)
+    start = time.time()
+    nodoRaiz = Nodo(estado, None, None, 0)
     #nodoRaiz = Nodo("231456_78", None, None, 0)
 
     X = {}
@@ -193,6 +216,12 @@ def astar_hamming(estado):
         v = heappop(F)
         if v.estado == "12345678_":
             listaRetorno = []
+            end = time.time()
+            print("astar_hamming")
+            print(estado)
+            print(end - start)
+            print(len(X))
+            print(v.custo)
             while v.pai is not None:
                 listaRetorno.append(v)
                 v = v.pai
@@ -207,7 +236,6 @@ def astar_hamming(estado):
                 if filho.estado not in X:
                     filho.heuristica = hamming(filho.estado)
                     heappush(F, filho)
-
     #raise NotImplementedError
 
 
@@ -220,7 +248,8 @@ def astar_manhattan(estado):
     :param estado: str
     :return:
     """
-    nodoRaiz = Nodo(estado, None, None, 0, 0)
+    start = time.time()
+    nodoRaiz = Nodo(estado, None, None, 0)
     nodoRaiz.heuristica = manhattan_distance(nodoRaiz)
 
     X = {}
@@ -233,6 +262,12 @@ def astar_manhattan(estado):
         v = heappop(F)
         if v.estado == "12345678_":
             listaRetorno = []
+            end = time.time()
+            print("astar_manhattan")
+            print(estado)
+            print(end - start)
+            print(len(X))
+            print(v.custo)
             while v.pai is not None:
                 listaRetorno.append(v)
                 v = v.pai
@@ -244,6 +279,7 @@ def astar_manhattan(estado):
                 if filho.estado not in X:
                     filho.heuristica = manhattan_distance(filho)
                     heappush(F,filho)
+
 
 def manhattan_distance(nodo):
     distance = 0
