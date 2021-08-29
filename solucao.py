@@ -8,7 +8,7 @@ class Nodo:
     """
 
 
-    def __init__(self, estado, pai, acao, custo, heuristica):
+    def __init__(self, estado: object, pai: object, acao: object, custo: object, heuristica: object) -> object:
         """
         Inicializa o nodo com os atributos recebidos
         :param estado:str, representacao do estado do 8-puzzle
@@ -163,7 +163,7 @@ def hamming(estado):
     estadoFinal = "12345678_"
     resultado = 0
 
-    for pos in range(9):
+    for pos in range(8):
         if estado[pos] != estadoFinal[pos] :
             resultado += 1
     
@@ -181,16 +181,16 @@ def astar_hamming(estado):
     # substituir a linha abaixo pelo seu codigo
     nodoRaiz = Nodo(estado, None, None, 0, 0)
     #nodoRaiz = Nodo("231456_78", None, None, 0)
-    id = 1
 
     X = {}
     F = [] #heap queue
-    heappush(F, (0, 0, nodoRaiz))
+    heapify(F)
+    heappush(F, nodoRaiz)
 
     while True:
         if not F:
             return None
-        v = heappop(F)[2]
+        v = heappop(F)
         if v.estado == "12345678_":
             listaRetorno = []
             while v.pai is not None:
@@ -205,8 +205,8 @@ def astar_hamming(estado):
             filhos = expande(v)
             for filho in filhos:
                 if filho.estado not in X:
-                    heappush(F, (hamming(filho.estado), id ,filho))
-                    id = id + 1
+                    filho.heuristica = hamming(filho.estado)
+                    heappush(F, filho)
 
     #raise NotImplementedError
 
@@ -248,7 +248,7 @@ def astar_manhattan(estado):
 def manhattan_distance(nodo):
     distance = 0
     for indexSolucao in range(8):
-        indexCaractere = nodo.estado.find(str(indexSolucao))
+        indexCaractere = nodo.estado.find(str(indexSolucao+1))
         dist_x = abs((indexCaractere % 3) - (indexSolucao % 3))
         dist_y = abs(int(indexCaractere / 3) - int(indexSolucao / 3))
         distance = distance + dist_x + dist_y
